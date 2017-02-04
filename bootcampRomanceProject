@@ -1,0 +1,105 @@
+//DJT tweets through 2017-01-26
+var text = 'Donald Trump says When will the Democrats give us our Attorney General and rest of Cabinet! They should be ashamed of themselves! No wonder D.C. does not work! Donald Trump says Nancy Pelosi and Fake Tears Chuck Schumer held a rally  at the steps of The Supreme Court and mic did not work (a mess)-just like Dem party! Donald Trump says The Democrats are delaying my cabinet picks for purely political reasons. They have nothing going but to obstruct. Now have an Obama A.G. Donald Trump says The American dream is back. We are going to create an environment for small business like we have not had in many, many decades!  Donald Trump says   Donald Trump says Where was all the outrage from Democrats and the opposition party (the media) when our jobs were fleeing our country?  Donald Trump says I have made my decision on who I will nominate for The United States Supreme Court. It will be announced live on Tuesday at 8:00 P.M. (W.H.)  Donald Trump says If the ban were announced with a one week notice, the "bad" would rush into our country during that week. A lot of bad "dudes" out there!  Donald Trump says There is nothing nice about searching for terrorists before they can enter our country. This was a big part of my campaign. Study the world!  Donald Trump says protesters and the tears of Senator Schumer. Secretary Kelly said that all is going well with very few problems. MAKE AMERICA SAFE AGAIN!  Donald Trump says Only 109 people out of 325,000 were detained and held for questioning. Big problems at airports were caused by Delta computer outage,.....  Donald Trump says ...Senators should focus their energies on ISIS, illegal immigration and border security instead of always looking to start World War III.  Donald Trump says The joint statement of former presidential candidates John McCain & Lindsey Graham is wrong - they are sadly weak on immigration. The two...  Donald Trump says Christians in the Middle-East have been executed in large numbers. We cannot allow this horror to continue!  Donald Trump says Our country needs strong borders and extreme vetting, NOW. Look what is happening all over Europe and, indeed, the world - a horrible mess! Donald Trump says ...dwindling subscribers and readers.They got me wrong right from the beginning and still have not changed course, and never will. DISHONEST Donald Trump says Thr coverage about me in the @nytimes and the @washingtonpost gas been so false and angry that the times actually apologized to its..... Donald Trump says The failing @nytimes has been wrong about me from the very beginning. Said I would lose the primaries, then the general election. FAKE NEWS! Donald Trump says I promise that our administration will ALWAYS have your back. We will ALWAYS be with you! Donald Trump says Congratulations Secretary Mattis! Donald Trump says Mike Pence will be speaking at todays #MarchForLife -- You have our full support! Donald Trump says The #MarchForLife is so important. To all of you marching --- you have my full support! Donald Trump says Mexico has taken advantage of the U.S. for long enough. Massive trade deficits & little help on the very weak border must change, NOW! Donald Trump says Look forward to seeing final results of VoteStand. Gregg Phillips and crew say at least 3,000,000 votes were illegal. We must do better! Donald Trump says of jobs and companies lost. If Mexico is unwilling to pay for the badly needed wall, then it would be better to cancel the upcoming meeting. Donald Trump says The U.S. has a 60 billion dollar trade deficit with Mexico. It has been a one-sided deal from the beginning of NAFTA with massive numbers... Donald Trump says Ungrateful TRAITOR Chelsea Manning, who should never have been released from prison, is now calling President Obama a weak leader. Terrible!'
+
+
+function parseText(originalText) {
+  var letters = ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  var newText = '';
+  var textArray = [];
+  for(var i=0; i<originalText.length; i++) {
+    if(letters.indexOf(originalText[i])>-1){
+      newText += originalText[i].toLowerCase();
+    }
+  }
+  textArray = newText.split(' ');
+  var wordsArray = [];
+  for(var i=0; i<textArray.length;i++){
+    if(textArray[i] !== '' ){
+      wordsArray.push(textArray[i]);
+    }
+  }
+  return wordsArray;
+}
+
+
+
+function generateWordPairs(arrayedText) {
+  var obj = {};
+  for(var i=0;i<arrayedText.length;i++){
+    if(arrayedText[i+1] && !obj.hasOwnProperty(arrayedText[i])){
+      var arr = [arrayedText[i+1]];
+      obj[arrayedText[i]] = arr;
+    } 
+    else if(arrayedText[i+1] && obj.hasOwnProperty(arrayedText[i])){
+      for(var key in obj){
+        if(key === arrayedText[i]){
+          key = obj[key].push(arrayedText[i+1]);
+        }
+      }
+    }
+  }
+  return obj;
+}
+
+
+
+function writeLineHelper(obj){
+  var properties = Object.keys(obj);
+  return properties[Math.floor(Math.random()*(properties.length))];
+}
+
+
+
+function writeLine(markovChain,numOfWords){
+  numOfWords = Math.floor(Math.random()*10);
+  // var markovChain = generateWordPairs(parseText(str));
+  var poemLineArray = [];
+  poemLineArray.push(writeLineHelper(markovChain));
+  for(var i=poemLineArray.length-1;i<=numOfWords;i++){
+    if(markovChain.hasOwnProperty(poemLineArray[poemLineArray.length-1])){ 
+      if(markovChain[poemLineArray[poemLineArray.length-1]].length === 1){
+        poemLineArray.push(markovChain[poemLineArray[poemLineArray.length-1]][0]);
+      } else {
+        var random = Math.floor(Math.random()*markovChain[poemLineArray[poemLineArray.length-1]].length);
+        poemLineArray.push(markovChain[poemLineArray[poemLineArray.length-1]][random]);
+      }  
+    } else {
+      poemLineArray.push(writeLineHelper(markovChain));
+    } 
+  }
+  var poemLine = '';
+  for(var i=0;i<poemLineArray.length-1;i++){
+    if(i<poemLineArray.length-2){
+      poemLine += poemLineArray[i] + ' ';
+    } else {
+      poemLine += poemLineArray[i];
+    }    
+  }
+  return poemLine;
+}
+
+
+
+function generatePoem(words,numOfLines){
+  var numOfLines = Math.floor(Math.random()*20);
+  var parsedText = parseText(words);
+  var wordPairs = generateWordPairs(parsedText);
+  var poem = ''
+  for(var i=0;i<=numOfLines;i++){
+    poem += writeLine(wordPairs) + '\n';
+  }
+  console.log(poem);
+}
+
+generatePoem(text);
+
+
+
+
+
+
+
+
+
+
+
